@@ -1,0 +1,70 @@
+syntax = "proto3";
+//定义博客服务
+service BlogService{
+    //查看博客，博客列表
+    rpc GetBlogList(BlogListRequest) returns (BlogListResponse){}
+    //写博客
+    rpc WriteBlog(WriteBlogRequest) returns (WriteBlogResponse){}
+    //删除博客
+    rpc DeleteBlog(DeleteBlogRequest) returns (DeleteBlogResponse){}
+    //修改博客
+    rpc ModifyBlog(ModifyBlogRequest) returns (ModifyBlogResponse){}
+    //博客详情
+    rpc BlogDetail(BlogDetailRequest) returns (BlogDetailResponse){}
+}
+//LIST
+message BlogListRequest{
+
+}
+
+message BlogListResponse{
+    repeated BlogInfo blogList = 1;
+}
+
+message BlogInfo {
+    string uuid = 1;
+    string buildTime = 2;
+    string title = 3;
+}
+
+//WRITE
+message WriteBlogRequest{
+    string blogId = 1;
+}
+
+message WriteBlogResponse{
+    int64 code = 1;
+    string message = 2;
+}
+//delete
+message DeleteBlogRequest{
+    string blogId = 1;
+}
+
+message DeleteBlogResponse{
+    int64 code = 1;
+    string message = 2;
+}
+
+
+//modify
+message ModifyBlogRequest{
+    string blogId = 1;
+    string title = 2;
+    string detail = 3;
+}
+
+message ModifyBlogResponse{
+    int64 code = 1;
+    string message = 2;
+}
+//detail
+message BlogDetailRequest{
+    string blogId = 1;
+}
+message BlogDetailResponse{
+    string uuid = 1;
+    string buildTime = 2;
+    string title = 3;
+    string detail = 4;
+}
