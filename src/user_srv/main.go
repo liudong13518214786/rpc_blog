@@ -5,8 +5,9 @@ import (
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/server"
 	"rpc_blog/config"
-	user_2 "rpc_blog/proto/user"
+	user_ext "rpc_blog/proto/user"
 	"rpc_blog/src/user_srv/db"
+	"rpc_blog/src/user_srv/handler"
 )
 
 func main() {
@@ -16,7 +17,7 @@ func main() {
 	service.Init(
 		micro.Action(func(context *cli.Context) {
 			db.InitDatabase(config.MysqlDSN)
-			_ = user_2.RegisterUserServiceHandler(service.Server(), user_2.UserServiceHandler(), server.InternalHandler(true))
+			_ = user_ext.RegisterUserServiceHandler(service.Server(), handler.NewUserServiceHandler(), server.InternalHandler(true))
 		}),
 	)
 }
