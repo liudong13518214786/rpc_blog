@@ -9,7 +9,7 @@ type User struct {
 }
 
 func InsertUser(username, email, password string) error {
-	today := utils.GetTimeNow()
+	today := utils.GetTimeNowFormat()
 	_, err := db.Exec("INSERT INTO user(username,password,build_time,email) VALUES(?,?,?,?)", username, password, today, email)
 	return err
 }
