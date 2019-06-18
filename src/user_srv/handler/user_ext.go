@@ -9,9 +9,9 @@ import "context"
 type NewUserServiceExtHandler struct {
 }
 
-func NewUserServiceHandler() *NewUserServiceExtHandler {
-	return &NewUserServiceExtHandler{}
-}
+//func NewUserServiceHandler() *NewUserServiceExtHandler {
+//	return &NewUserServiceExtHandler{}
+//}
 
 func (u *NewUserServiceExtHandler) RegisterUser(ctx context.Context, req *user_ext.RegisterRequest, resp *user_ext.RegisterResponse) error {
 	email := req.Email

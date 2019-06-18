@@ -1,6 +1,6 @@
 package db
 
-import "time"
+import "rpc_blog/src/module/utils"
 
 type User struct {
 	UserName string `json:"username" db:"username"`
@@ -9,7 +9,7 @@ type User struct {
 }
 
 func InsertUser(username, email, password string) error {
-	today := time.Now().Format("2006-01-02 15:04:05")
+	today := utils.GetTimeNow()
 	_, err := db.Exec("INSERT INTO user(username,password,build_time,email) VALUES(?,?,?,?)", username, password, today, email)
 	return err
 }
