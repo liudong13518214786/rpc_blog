@@ -8,16 +8,20 @@ import (
 	user_ext "rpc_blog/proto/user"
 	"rpc_blog/src/user_srv/db"
 	"rpc_blog/src/user_srv/handler"
+	"time"
 )
 
 func main() {
 	service := micro.NewService(micro.Name(config.NameSpace+config.ServiceNameUser),
-		micro.Version("latest"))
+		micro.Version("latest"),
+		micro.RegisterTTL(time.Second*30),      //注册服务的过期时间
+		micro.RegisterInterval(time.Second*20)) //间隔多久再次注册服务
 	//定义service的操作
 	service.Init(
 		micro.Action(func(context *cli.Context) {
 			db.InitDatabase(config.MysqlDSN)
-			_ = user_ext.RegisterUserServiceHandler(service.Server(), new(handler.NewUserServiceExtHandler), server.InternalHandler(true))
+			_ = user_ext.RegisterUserServiceHandler(service.Server(), new(handler.NewUserServiceExtHandler),
+				server.InternalHandler(true))
 		}),
 		micro.AfterStop(func() error {
 			return nil
