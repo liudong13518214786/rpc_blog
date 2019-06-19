@@ -31,3 +31,9 @@ func WriteBlog(useruuid, info, title string) error {
 	_, err := db.Exec("INSERT INTO blog(uuid, useruuid, info, title, build_time, status) VALUES (?, ?, ?, ?, ?, ?);", uuid, useruuid, info, title, buildTime, "normal")
 	return err
 }
+
+func GetBlogDetailByUseruuid(bid, useruuid string) (*Blog, error) {
+	blog := &Blog{}
+	err := db.Get(blog, "SELECT uuid, useruuid, info,title,build_time FROM blog WHERE uuid=? AND status=? AND useruuid=? ORDER BY build_time DESC ;", bid, "normal", useruuid)
+	return blog, err
+}

@@ -58,6 +58,13 @@ func (b *BlogServiceExtHandler) WriteBlog(ctx context.Context, req *blog_ext.Wri
 }
 
 func (b *BlogServiceExtHandler) DeleteBlog(ctx context.Context, req *blog_ext.DeleteBlogRequest, resp *blog_ext.DeleteBlogResponse) error {
+	bid := req.BlogId
+	userid := req.Userid
+	res, err := db.GetBlogDetailByUseruuid(bid, userid)
+	if err != nil {
+		resp.Code = 500
+		resp.Message = "找不到bid"
+	}
 	return nil
 }
 
