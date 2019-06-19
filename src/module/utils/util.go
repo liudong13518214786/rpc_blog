@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"math/rand"
 	"rpc_blog/config"
 	"strings"
 	"time"
@@ -48,4 +49,14 @@ func CheckParma(parm ...string) (string, bool) {
 		}
 	}
 	return "", true
+}
+
+func GenerateRandomString(suff string, l int) string {
+	bytes := "0123456789abcdefghijklmnopqrstuvwxyz"
+	result := []byte{}
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := 0; i < l; i++ {
+		result = append(result, bytes[r.Intn(len(bytes))])
+	}
+	return fmt.Sprintf("%s_%s", suff, string(result))
 }

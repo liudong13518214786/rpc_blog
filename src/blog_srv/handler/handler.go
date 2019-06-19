@@ -3,13 +3,19 @@ package handler
 import (
 	"context"
 	blog_ext "rpc_blog/proto/blog"
+	"rpc_blog/src/module/utils"
 )
 
 type BlogServiceExtHandler struct {
 }
 
 func (b *BlogServiceExtHandler) GetBlogList(ctx context.Context, req *blog_ext.BlogListRequest, resp *blog_ext.BlogListResponse) error {
-	//token:=req.Token
+	userid := req.Userid
+	_, status := utils.CheckParma(userid)
+	if !status {
+		resp.BlogList = nil
+		return nil
+	}
 
 	return nil
 }

@@ -14,7 +14,7 @@ service BlogService{
 }
 //LIST
 message BlogListRequest{
-    string token=1;
+    string userid=1;
 }
 
 message BlogListResponse{
@@ -30,7 +30,7 @@ message BlogInfo {
 //WRITE
 message WriteBlogRequest{
     string blogId = 1;
-    string token = 2;
+    string userid = 2;
 }
 
 message WriteBlogResponse{
@@ -40,7 +40,7 @@ message WriteBlogResponse{
 //delete
 message DeleteBlogRequest{
     string blogId = 1;
-    string token =2;
+    string userid =2;
 }
 
 message DeleteBlogResponse{
@@ -54,7 +54,7 @@ message ModifyBlogRequest{
     string blogId = 1;
     string title = 2;
     string detail = 3;
-    string token = 4;
+    string userid = 4;
 }
 
 message ModifyBlogResponse{
@@ -64,7 +64,7 @@ message ModifyBlogResponse{
 //detail
 message BlogDetailRequest{
     string blogId = 1;
-    string token = 2;
+    string userid = 2;
 }
 message BlogDetailResponse{
     string uuid = 1;

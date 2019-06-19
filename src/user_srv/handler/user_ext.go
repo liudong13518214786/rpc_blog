@@ -26,6 +26,12 @@ func (u *NewUserServiceExtHandler) RegisterUser(ctx context.Context, req *user_e
 		resp.Message = res
 		return nil
 	}
+	user, _ := db.GetUserByEmail(email)
+	if user != nil {
+		resp.Code = 512
+		resp.Message = "Email has been registered"
+		return nil
+	}
 	err := db.InsertUser(username, email, password)
 	if err != nil {
 		resp.Code = 500
@@ -57,12 +63,12 @@ func (u *NewUserServiceExtHandler) LoginUser(ctx context.Context, req *user_ext.
 		resp.Message = "error email"
 		return err
 	}
-	sdtoken := utils.CreateToken(email)
+	sdtoken := utils.CreateToken(user.UserId)
 	cache.Mcache.Delete(sdtoken)
 	resx := cache.Mcache.Set("token", sdtoken, 86400)
 	if resx {
 		resp.Code = 100
-		resp.Message = "login success"
+		resp.Message = sdtoken
 	}
 	return nil
 }
@@ -96,14 +102,14 @@ func (u *NewUserServiceExtHandler) VerifyToken(ctx context.Context, req *user_ex
 		resp.Message = res
 		return err
 	}
-	email := res
-	user, err := db.GetUserByEmail(email)
+	userid := res
+	user, err := db.GetUserByUuid(userid)
 	if err != nil {
 		resp.Code = 505
 		resp.Message = "token error"
 		return err
 	}
 	resp.Code = 100
-	resp.Message = user.Email
+	resp.Message = user.UserId
 	return nil
 }
