@@ -18,11 +18,42 @@ func (b *BlogServiceExtHandler) GetBlogList(ctx context.Context, req *blog_ext.B
 		return nil
 	}
 	bloglist, err := db.GetBlogList()
+	if err != nil {
+		resp.BlogList = nil
+		return nil
+	}
 	resp.BlogList = bloglist
 	return nil
 }
 
 func (b *BlogServiceExtHandler) WriteBlog(ctx context.Context, req *blog_ext.WriteBlogRequest, resp *blog_ext.WriteBlogResponse) error {
+	UserId := req.Userid
+	BlogId := req.BlogId
+	res, success := utils.CheckParma(UserId)
+	if !success {
+		resp.Code = 500
+		resp.Message = res
+		return nil
+	}
+	if BlogId != "" {
+		blog, err := db.GetBlogDetail(BlogId)
+		if err != nil {
+			resp.Code = 500
+			resp.Message = "system error"
+			return nil
+		}
+		if blog != nil {
+			resp.Code = 505
+			resp.Message = "blog id is exist"
+			return nil
+		}
+	}
+	err := db.WriteBlog(UserId, req.Title, req.Title)
+	if err != nil {
+		resp.Code = 510
+		resp.Message = "write blog err"
+		return nil
+	}
 	return nil
 }
 

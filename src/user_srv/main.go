@@ -16,6 +16,7 @@ func main() {
 		micro.Version("latest"),
 		micro.RegisterTTL(time.Second*30),      //注册服务的过期时间
 		micro.RegisterInterval(time.Second*20)) //间隔多久再次注册服务
+	//micro.Registry(server.Registry())
 	//定义service的操作
 	service.Init(
 		micro.Action(func(context *cli.Context) {

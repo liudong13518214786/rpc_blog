@@ -31,6 +31,8 @@ message BlogInfo {
 message WriteBlogRequest{
     string blogId = 1;
     string userid = 2;
+    string title = 3;
+    string info = 4;
 }
 
 message WriteBlogResponse{
