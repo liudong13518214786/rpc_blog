@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/astaxie/beego"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/server"
@@ -20,19 +21,22 @@ func main() {
 	//定义service的操作
 	service.Init(
 		micro.Action(func(context *cli.Context) {
-			db.InitDatabase(config.MysqlDSN)
+			db.InitDatabase(config.PostgresqlDSN_User)
 			_ = user_ext.RegisterUserServiceHandler(service.Server(), new(handler.NewUserServiceExtHandler),
 				server.InternalHandler(true))
 		}),
 		micro.AfterStop(func() error {
+			beego.Info("用户服务已经停止")
 			return nil
 		}),
 		micro.AfterStart(func() error {
+			beego.Info("用户服务正在运行...")
 			return nil
 		}),
 	)
+
 	if err := service.Run(); err != nil {
 		//启动失败
-
+		beego.Error("用户服务启动失败")
 	}
 }

@@ -20,7 +20,7 @@ func main() {
 
 	service.Init(
 		micro.Action(func(context *cli.Context) {
-			db.InitDatabase(config.PostgresqlDSN)
+			db.InitDatabase(config.PostgresqlDSN_Blog)
 			_ = blog_ext.RegisterBlogServiceHandler(service.Server(),
 				new(handler.BlogServiceExtHandler),
 				server.InternalHandler(true))
