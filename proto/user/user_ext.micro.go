@@ -40,6 +40,8 @@ type UserService interface {
 	LoginUser(ctx context.Context, in *LoginRequest, opts ...client.CallOption) (*LoginResponse, error)
 	//退出登录
 	LogOutUser(ctx context.Context, in *LogOutRequest, opts ...client.CallOption) (*LogOutResponse, error)
+	//校验token
+	VerifyToken(ctx context.Context, in *VerifyRequest, opts ...client.CallOption) (*VerifyResponse, error)
 }
 
 type userService struct {
@@ -90,6 +92,16 @@ func (c *userService) LogOutUser(ctx context.Context, in *LogOutRequest, opts ..
 	return out, nil
 }
 
+func (c *userService) VerifyToken(ctx context.Context, in *VerifyRequest, opts ...client.CallOption) (*VerifyResponse, error) {
+	req := c.c.NewRequest(c.name, "UserService.VerifyToken", in)
+	out := new(VerifyResponse)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // Server API for UserService service
 
 type UserServiceHandler interface {
@@ -99,6 +111,8 @@ type UserServiceHandler interface {
 	LoginUser(context.Context, *LoginRequest, *LoginResponse) error
 	//退出登录
 	LogOutUser(context.Context, *LogOutRequest, *LogOutResponse) error
+	//校验token
+	VerifyToken(context.Context, *VerifyRequest, *VerifyResponse) error
 }
 
 func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts ...server.HandlerOption) error {
@@ -106,6 +120,7 @@ func RegisterUserServiceHandler(s server.Server, hdlr UserServiceHandler, opts .
 		RegisterUser(ctx context.Context, in *RegisterRequest, out *RegisterResponse) error
 		LoginUser(ctx context.Context, in *LoginRequest, out *LoginResponse) error
 		LogOutUser(ctx context.Context, in *LogOutRequest, out *LogOutResponse) error
+		VerifyToken(ctx context.Context, in *VerifyRequest, out *VerifyResponse) error
 	}
 	type UserService struct {
 		userService
@@ -128,4 +143,8 @@ func (h *userServiceHandler) LoginUser(ctx context.Context, in *LoginRequest, ou
 
 func (h *userServiceHandler) LogOutUser(ctx context.Context, in *LogOutRequest, out *LogOutResponse) error {
 	return h.UserServiceHandler.LogOutUser(ctx, in, out)
+}
+
+func (h *userServiceHandler) VerifyToken(ctx context.Context, in *VerifyRequest, out *VerifyResponse) error {
+	return h.UserServiceHandler.VerifyToken(ctx, in, out)
 }

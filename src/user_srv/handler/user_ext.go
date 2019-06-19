@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"rpc_blog/proto/user"
 	"rpc_blog/src/module/cache"
 	"rpc_blog/src/module/utils"
@@ -45,11 +46,15 @@ func (u *NewUserServiceExtHandler) LoginUser(ctx context.Context, req *user_ext.
 		resp.Message = res
 		return nil
 	}
-	user, err := db.GetUserByEmail(email, password)
+	user, err := db.GetUserByEmailPassword(email, password)
 	if err != nil {
+		resp.Code = 510
+		resp.Message = "error email"
 		return err
 	}
 	if user == nil {
+		resp.Code = 511
+		resp.Message = "error email"
 		return err
 	}
 	sdtoken := utils.CreateToken(email)
@@ -68,14 +73,37 @@ func (u *NewUserServiceExtHandler) LogOutUser(ctx context.Context, req *user_ext
 	if !success {
 		resp.Code = 505
 		resp.Message = res
-		return nil
+		e := errors.New("token err")
+		return e
 	}
 	_, err := utils.CheckToken(token)
 	if err != nil {
 		resp.Code = 500
 		resp.Message = "token error"
-		return nil
+		return err
 	}
 	cache.Mcache.Delete(token)
+	resp.Code = 100
+	resp.Message = "logout success"
+	return nil
+}
+
+func (u *NewUserServiceExtHandler) VerifyToken(ctx context.Context, req *user_ext.VerifyRequest, resp *user_ext.VerifyResponse) error {
+	token := req.Token
+	res, err := utils.CheckToken(token)
+	if err != nil {
+		resp.Code = 500
+		resp.Message = res
+		return err
+	}
+	email := res
+	user, err := db.GetUserByEmail(email)
+	if err != nil {
+		resp.Code = 505
+		resp.Message = "token error"
+		return err
+	}
+	resp.Code = 100
+	resp.Message = user.Email
 	return nil
 }
