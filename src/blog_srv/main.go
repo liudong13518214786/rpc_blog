@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/astaxie/beego"
 	"github.com/micro/cli"
 	"github.com/micro/go-micro"
 	"github.com/micro/go-micro/server"
@@ -26,13 +27,16 @@ func main() {
 				server.InternalHandler(true))
 		}),
 		micro.AfterStop(func() error {
+			beego.Info("博客服务已经停止")
 			return nil
 		}),
 		micro.AfterStart(func() error {
+			beego.Info("博客服务已启动...")
 			return nil
 		}),
 	)
 	if err := service.Run(); err != nil {
 		//
+		beego.Error("博客服务启动失败:", err)
 	}
 }
