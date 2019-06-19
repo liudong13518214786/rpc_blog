@@ -18,18 +18,18 @@ func InsertUser(username, email, password string) error {
 
 func GetUserByEmailPassword(email, password string) (*User, error) {
 	user := User{}
-	err := db.Get(&user, "SELECT * FROM users WHERE email=? AND password=? LIMIT 1", email, password)
+	err := db.Get(&user, "SELECT uuid, username, password, email FROM users WHERE email=? AND password=? LIMIT 1", email, password)
 	return &user, err
 }
 
 func GetUserByEmail(email string) (*User, error) {
 	user := User{}
-	err := db.Get(&user, "SELECT * FROM users WHERE email=? LIMIT 1", email)
+	err := db.Get(&user, "SELECT uuid, username, password, email FROM users WHERE email=? LIMIT 1", email)
 	return &user, err
 }
 
 func GetUserByUuid(uuid string) (*User, error) {
 	user := User{}
-	err := db.Get(&user, "SELECT * FROM users WHERE uuid=? LIMIT 1", uuid)
+	err := db.Get(&user, "SELECT uuid, username, password, email FROM users WHERE uuid=? LIMIT 1", uuid)
 	return &user, err
 }

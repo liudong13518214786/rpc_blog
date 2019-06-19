@@ -3,6 +3,7 @@ package handler
 import (
 	"context"
 	blog_ext "rpc_blog/proto/blog"
+	"rpc_blog/src/blog_srv/db"
 	"rpc_blog/src/module/utils"
 )
 
@@ -16,7 +17,8 @@ func (b *BlogServiceExtHandler) GetBlogList(ctx context.Context, req *blog_ext.B
 		resp.BlogList = nil
 		return nil
 	}
-
+	bloglist, err := db.GetBlogList()
+	resp.BlogList = bloglist
 	return nil
 }
 
