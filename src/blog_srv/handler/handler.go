@@ -9,6 +9,8 @@ type BlogServiceExtHandler struct {
 }
 
 func (b *BlogServiceExtHandler) GetBlogList(ctx context.Context, req *blog_ext.BlogListRequest, resp *blog_ext.BlogListResponse) error {
+	//token:=req.Token
+
 	return nil
 }
 
