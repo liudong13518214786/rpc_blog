@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	blog_ext "rpc_blog/proto/blog"
 	"rpc_blog/src/blog_srv/db"
 	"rpc_blog/src/module/utils"
@@ -15,12 +16,13 @@ func (b *BlogServiceExtHandler) GetBlogList(ctx context.Context, req *blog_ext.B
 	_, status := utils.CheckParma(userid)
 	if !status {
 		resp.BlogList = nil
-		return nil
+		err := errors.New("缺少参数userid")
+		return err
 	}
 	bloglist, err := db.GetBlogList()
 	if err != nil {
 		resp.BlogList = nil
-		return nil
+		return err
 	}
 	resp.BlogList = bloglist
 	return nil
@@ -33,27 +35,32 @@ func (b *BlogServiceExtHandler) WriteBlog(ctx context.Context, req *blog_ext.Wri
 	if !success {
 		resp.Code = 500
 		resp.Message = res
-		return nil
+		err := errors.New(res)
+		return err
 	}
 	if BlogId != "" {
 		blog, err := db.GetBlogDetail(BlogId)
 		if err != nil {
 			resp.Code = 500
 			resp.Message = "system error"
-			return nil
+			err := errors.New("system error")
+			return err
 		}
 		if blog != nil {
 			resp.Code = 505
 			resp.Message = "blog id is exist"
-			return nil
+			err := errors.New("blog id is exist")
+			return err
 		}
 	}
 	err := db.WriteBlog(UserId, req.Title, req.Title)
 	if err != nil {
 		resp.Code = 510
 		resp.Message = "write blog err"
-		return nil
+		return err
 	}
+	resp.Code = 100
+	resp.Message = "write blog success"
 	return nil
 }
 
@@ -64,13 +71,13 @@ func (b *BlogServiceExtHandler) DeleteBlog(ctx context.Context, req *blog_ext.De
 	if err != nil {
 		resp.Code = 500
 		resp.Message = "找不到bid"
-		return nil
+		return err
 	}
 	err = db.UpdateBlogStatus(bid, "destroy")
 	if err != nil {
 		resp.Code = 505
 		resp.Message = "删除失败"
-		return nil
+		return err
 	}
 	resp.Code = 100
 	resp.Message = "删除成功"
@@ -86,13 +93,14 @@ func (b *BlogServiceExtHandler) ModifyBlog(ctx context.Context, req *blog_ext.Mo
 	if !success {
 		resp.Code = 500
 		resp.Message = status
-		return nil
+		err := errors.New(status)
+		return err
 	}
 	err := db.UpdateBlogInfo(bid, title, detail, userid)
 	if err != nil {
 		resp.Code = 505
 		resp.Message = "更新失败"
-		return nil
+		return err
 	}
 	resp.Code = 100
 	resp.Message = "修改成功"
@@ -108,7 +116,8 @@ func (b *BlogServiceExtHandler) BlogDetail(ctx context.Context, req *blog_ext.Bl
 		resp.Title = ""
 		resp.Uuid = ""
 		resp.BuildTime = ""
-		return nil
+		err := errors.New("缺少bid")
+		return err
 	}
 	blog, err := db.GetBlogDetail(bid)
 	if err != nil {
@@ -116,12 +125,12 @@ func (b *BlogServiceExtHandler) BlogDetail(ctx context.Context, req *blog_ext.Bl
 		resp.Title = ""
 		resp.Uuid = ""
 		resp.BuildTime = ""
-		return nil
+		err := errors.New("找不到内容")
+		return err
 	}
 	resp.Detail = blog.Info
 	resp.Title = blog.Title
 	resp.Uuid = blog.Uuid
 	resp.BuildTime = blog.BuildTime
 	return nil
-
 }

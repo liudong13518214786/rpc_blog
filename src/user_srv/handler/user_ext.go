@@ -24,13 +24,15 @@ func (u *NewUserServiceExtHandler) RegisterUser(ctx context.Context, req *user_e
 	if !success {
 		resp.Code = 505
 		resp.Message = res
-		return nil
+		err := errors.New(res)
+		return err
 	}
 	user, _ := db.GetUserByEmail(email)
 	if user != nil {
 		resp.Code = 512
 		resp.Message = "Email has been registered"
-		return nil
+		err := errors.New("Email has been registered")
+		return err
 	}
 	err := db.InsertUser(username, email, password)
 	if err != nil {
