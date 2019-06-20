@@ -69,7 +69,10 @@ func (u *NewUserServiceExtHandler) LoginUser(ctx context.Context, req *user_ext.
 	if resx {
 		resp.Code = 100
 		resp.Message = sdtoken
+		return nil
 	}
+	resp.Code = 506
+	resp.Message = "登录失败"
 	return nil
 }
 
