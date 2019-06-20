@@ -15,7 +15,7 @@ type Blog struct {
 
 func GetBlogList() ([]*blog_ext.BlogInfo, error) {
 	var bloglist []*blog_ext.BlogInfo
-	err := db.Select(bloglist, "SELECT uuid, useruuid, info,title,build_time FROM blog WHERE status=? ORDER BY build_time DESC ;", "normal")
+	err := db.Select(&bloglist, "SELECT uuid,title,build_time as buildTime FROM blog WHERE status='normal' ORDER BY build_time DESC ;")
 	return bloglist, err
 }
 
