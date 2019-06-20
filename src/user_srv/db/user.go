@@ -1,6 +1,9 @@
 package db
 
-import "rpc_blog/src/module/utils"
+import (
+	"database/sql"
+	"rpc_blog/src/module/utils"
+)
 
 type User struct {
 	UserId   string `json:"uuid" db:"uuid"`
@@ -12,19 +15,25 @@ type User struct {
 func InsertUser(username, email, password string) error {
 	today := utils.GetTimeNowFormat()
 	userid := utils.GenerateRandomString("usr", 8)
-	_, err := db.Exec("INSERT INTO user(uuid, username,password,build_time,email) VALUES(?,?,?,?,?)", userid, username, password, today, email)
+	_, err := db.Exec("INSERT INTO users(uuid, username,password,build_time,email,status) VALUES($1,$2,$3,$4,$5,$6)", userid, username, password, today, email, "normal")
 	return err
 }
 
 func GetUserByEmailPassword(email, password string) (*User, error) {
-	user := User{}
-	err := db.Get(&user, "SELECT uuid, username, password, email FROM users WHERE email=? AND password=? LIMIT 1", email, password)
+	var user User
+	err := db.Get(&user, "SELECT uuid, username, password, email FROM users WHERE email=$1 AND password=$2 LIMIT 1", email, password)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 	return &user, err
 }
 
 func GetUserByEmail(email string) (*User, error) {
-	user := User{}
-	err := db.Get(&user, "SELECT uuid, username, password, email FROM users WHERE email=? LIMIT 1", email)
+	var user User
+	err := db.Get(&user, "SELECT uuid,username,password,email FROM users WHERE email=$1 LIMIT 1", email)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 	return &user, err
 }
 

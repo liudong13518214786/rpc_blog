@@ -38,11 +38,11 @@ func (u *NewUserServiceExtHandler) RegisterUser(ctx context.Context, req *user_e
 	if err != nil {
 		resp.Code = 500
 		resp.Message = "user register failed"
-	} else {
-		resp.Code = 100
-		resp.Message = "user register success"
+		return err
 	}
-	return err
+	resp.Code = 100
+	resp.Message = "user register success"
+	return nil
 }
 
 func (u *NewUserServiceExtHandler) LoginUser(ctx context.Context, req *user_ext.LoginRequest, resp *user_ext.LoginResponse) error {
@@ -52,7 +52,8 @@ func (u *NewUserServiceExtHandler) LoginUser(ctx context.Context, req *user_ext.
 	if !success {
 		resp.Code = 505
 		resp.Message = res
-		return nil
+		err := errors.New(res)
+		return err
 	}
 	user, err := db.GetUserByEmailPassword(email, password)
 	if err != nil {
@@ -75,7 +76,8 @@ func (u *NewUserServiceExtHandler) LoginUser(ctx context.Context, req *user_ext.
 	}
 	resp.Code = 506
 	resp.Message = "登录失败"
-	return nil
+	err = errors.New("登录失败")
+	return err
 }
 
 func (u *NewUserServiceExtHandler) LogOutUser(ctx context.Context, req *user_ext.LogOutRequest, resp *user_ext.LogOutResponse) error {
