@@ -14,4 +14,7 @@ func init() {
 	//博客相关
 	beego.Router("/", &controllers.BlogControllers{})
 	beego.Router("/write", &controllers.BlogWriteControllers{})
+	beego.Router("/delete", &controllers.BlogDeleteControllers{})
+	beego.Router("/detail", &controllers.BlogDetailControllers{})
+	beego.Router("/modify", &controllers.BlogModifyControllers{})
 }
