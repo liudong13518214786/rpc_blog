@@ -21,8 +21,9 @@ func (b *BlogControllers) Get() {
 		beego.Error("博客服务：获取博客列表失败：", err)
 		return
 	}
-	a := blogResponse.BlogList
-	beego.Info(a)
-	b.Ctx.WriteString("123123")
-
+	bloginfo := blogResponse.BlogList
+	b.Data["json"] = map[string]interface{}{"code": 100, "message": bloginfo}
+	b.ServeJSON()
+	return
+	//b.Ctx.WriteString("123123")
 }
