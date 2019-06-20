@@ -37,3 +37,13 @@ func GetBlogDetailByUseruuid(bid, useruuid string) (*Blog, error) {
 	err := db.Get(blog, "SELECT uuid, useruuid, info,title,build_time FROM blog WHERE uuid=? AND status=? AND useruuid=? ORDER BY build_time DESC ;", bid, "normal", useruuid)
 	return blog, err
 }
+
+func UpdateBlogStatus(bid, status string) error {
+	_, err := db.Exec("UPDATE blog SET status=? WHERE bid=? AND status=?;", status, bid, "normal")
+	return err
+}
+
+func UpdateBlogInfo(bid, title, info, useruuid string) error {
+	_, err := db.Exec("UPDATE blog SET title=?,info=? WHERE bid=? AND status=? AND useruuid=?;", title, info, bid, "normal", useruuid)
+	return err
+}
