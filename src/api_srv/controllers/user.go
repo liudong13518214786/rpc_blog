@@ -17,6 +17,10 @@ type UserLoginControllers struct {
 	beego.Controller
 }
 
+type UserLogOutControllers struct {
+	beego.Controller
+}
+
 func initUserService() user_ext.UserService {
 	service := micro.NewService(micro.Name(config.NameSpace + config.ServiceNameUser + "client"))
 	service.Init()
@@ -52,6 +56,7 @@ func (u *UserRegisterControllers) Post() {
 
 }
 
+//用户登录
 func (u *UserLoginControllers) Post() {
 	email := u.GetString("email")
 	password := u.GetString("password")
@@ -72,4 +77,26 @@ func (u *UserLoginControllers) Post() {
 	u.Data["json"] = map[string]interface{}{"code": response.Code, "message": response.Message}
 	u.ServeJSON()
 	return
+}
+
+func (u *UserLogOutControllers) Post() {
+	token := u.GetString("token")
+	result, status := utils.CheckParma(token)
+	if !status {
+		u.Data["json"] = map[string]interface{}{"code": 500, "message": result}
+		u.ServeJSON()
+		return
+	}
+	userService := initUserService()
+	logoutResponse, err := userService.LogOutUser(context.TODO(), &user_ext.LogOutRequest{Token: token})
+	if err != nil {
+		beego.Error("用户服务：退出登录失败", err)
+		u.Data["json"] = map[string]interface{}{"code": 500, "message": "系统错误"}
+		u.ServeJSON()
+		return
+	}
+	u.Data["json"] = map[string]interface{}{"code": logoutResponse.Code, "message": logoutResponse.Message}
+	u.ServeJSON()
+	return
+
 }

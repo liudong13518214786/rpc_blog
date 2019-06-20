@@ -38,7 +38,10 @@ func GetUserByEmail(email string) (*User, error) {
 }
 
 func GetUserByUuid(uuid string) (*User, error) {
-	user := User{}
-	err := db.Get(&user, "SELECT uuid, username, password, email FROM users WHERE uuid=? LIMIT 1", uuid)
+	var user User
+	err := db.Get(&user, "SELECT uuid, username, password, email FROM users WHERE uuid=$1 LIMIT 1", uuid)
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 	return &user, err
 }

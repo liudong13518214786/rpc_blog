@@ -6,7 +6,12 @@ import (
 )
 
 func init() {
-	beego.Router("/", &controllers.BlogControllers{})
+	//登录注册相关
 	beego.Router("/register", &controllers.UserRegisterControllers{})
-	beego.Router("/login", &controllers.UserControllers{})
+	beego.Router("/login", &controllers.UserLoginControllers{})
+	beego.Router("/logout", &controllers.UserLogOutControllers{})
+
+	//博客相关
+	beego.Router("/", &controllers.BlogControllers{})
+	beego.Router("/write", &controllers.BlogWriteControllers{})
 }

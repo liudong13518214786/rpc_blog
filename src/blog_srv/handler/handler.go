@@ -31,7 +31,9 @@ func (b *BlogServiceExtHandler) GetBlogList(ctx context.Context, req *blog_ext.B
 func (b *BlogServiceExtHandler) WriteBlog(ctx context.Context, req *blog_ext.WriteBlogRequest, resp *blog_ext.WriteBlogResponse) error {
 	UserId := req.Userid
 	BlogId := req.BlogId
-	res, success := utils.CheckParma(UserId)
+	title := req.Title
+	detail := req.Info
+	res, success := utils.CheckParma(UserId, title, detail)
 	if !success {
 		resp.Code = 500
 		resp.Message = res
@@ -53,7 +55,7 @@ func (b *BlogServiceExtHandler) WriteBlog(ctx context.Context, req *blog_ext.Wri
 			return err
 		}
 	}
-	err := db.WriteBlog(UserId, req.Title, req.Title)
+	err := db.WriteBlog(UserId, detail, title)
 	if err != nil {
 		resp.Code = 510
 		resp.Message = "write blog err"
