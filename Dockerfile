@@ -10,7 +10,7 @@ RUN go get -u -v github.com/micro/go-micro
 RUN go get -u -v github.com/micro/micro
 RUN go get -u -v github.com/jmoiron/sqlx
 RUN go get -u -v github.com/bradfitz/gomemcache/memcache
-RUn go get -u -v github.com/sirupsen/logrus
+RUN go get -u -v github.com/sirupsen/logrus
 EXPOSE 8877
 
 #RUN cd /go/src/sxsim
