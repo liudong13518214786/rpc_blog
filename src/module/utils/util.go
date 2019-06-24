@@ -15,8 +15,8 @@ func GetTimeNowFormat() string {
 	return today
 }
 
-func CreateToken(email string) string {
-	auth_raw := []byte(config.SECRETKEY + ":" + email)
+func CreateToken(useruuid string) string {
+	auth_raw := []byte(config.SECRETKEY + ":" + useruuid)
 	return base64.StdEncoding.EncodeToString(auth_raw)
 }
 
@@ -32,12 +32,12 @@ func CheckToken(token string) (string, error) {
 		err := errors.New("token error 12")
 		return "", err
 	}
-	key, email := resList[0], resList[1]
+	key, useruuid := resList[0], resList[1]
 	if key != config.SECRETKEY {
 		err := errors.New("token error 13")
 		return "", err
 	}
-	return email, nil
+	return useruuid, nil
 }
 
 func CheckParma(parm ...string) (string, bool) {

@@ -68,7 +68,7 @@ func (u *NewUserServiceExtHandler) LoginUser(ctx context.Context, req *user_ext.
 	}
 	sdtoken := utils.CreateToken(user.UserId)
 	cache.Mcache.Delete(sdtoken)
-	resx := cache.Mcache.Set("token", sdtoken, 86400)
+	resx := cache.Mcache.Set(sdtoken, user.UserId, 86400)
 	if resx {
 		resp.Code = 100
 		resp.Message = sdtoken
@@ -118,6 +118,12 @@ func (u *NewUserServiceExtHandler) VerifyToken(ctx context.Context, req *user_ex
 		return err
 	}
 	userid := res
+	useruuid, err := cache.Mcache.Get(token)
+	if userid != string(useruuid) {
+		resp.Code = 506
+		resp.Message = "token error"
+		return err
+	}
 	user, err := db.GetUserByUuid(userid)
 	if err != nil {
 		resp.Code = 505
