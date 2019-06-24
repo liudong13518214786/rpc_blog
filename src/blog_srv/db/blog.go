@@ -49,11 +49,11 @@ func GetBlogDetailByUseruuid(bid, useruuid string) (*Blog, error) {
 }
 
 func UpdateBlogStatus(bid, status string) error {
-	_, err := db.Exec("UPDATE blog SET status=$1 WHERE bid=$2 AND status=$3;", status, bid, "normal")
+	_, err := db.Exec("UPDATE blog SET status=$1 WHERE uuid=$2 AND status=$3;", status, bid, "normal")
 	return err
 }
 
 func UpdateBlogInfo(bid, title, info, useruuid string) error {
-	_, err := db.Exec("UPDATE blog SET title=$1,info=$2 WHERE bid=$3 AND status=$4 AND useruuid=$5;", title, info, bid, "normal", useruuid)
+	_, err := db.Exec("UPDATE blog SET title=$1,info=$2 WHERE uuid=$3 AND status=$4 AND useruuid=$5;", title, info, bid, "normal", useruuid)
 	return err
 }

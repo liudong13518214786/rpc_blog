@@ -178,7 +178,7 @@ func (b *BlogModifyControllers) Post() {
 	BlogService := initBlogService()
 	ModifyBlogResponse, err := BlogService.ModifyBlog(context.TODO(), &blog_ext.ModifyBlogRequest{BlogId: bid, Title: title, Detail: detail, Userid: userId})
 	if err != nil {
-		beego.Error("博客服务：修改博客失败")
+		beego.Error("博客服务：修改博客失败:", err)
 		b.Data["json"] = map[string]interface{}{"code": 500, "message": "修改失败"}
 		b.ServeJSON()
 		return
