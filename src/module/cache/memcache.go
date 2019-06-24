@@ -53,6 +53,7 @@ func (m *MemcacheHandler) Get(key string) ([]byte, error) {
 func (m *MemcacheHandler) Delete(key string) bool {
 	err := mc.Delete(key)
 	if err != nil {
+		beego.Error(err)
 		return false
 	}
 	return true

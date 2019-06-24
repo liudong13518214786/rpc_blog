@@ -95,10 +95,18 @@ func (u *NewUserServiceExtHandler) LogOutUser(ctx context.Context, req *user_ext
 		resp.Message = "token error"
 		return err
 	}
-	cache.Mcache.Delete(token)
-	resp.Code = 100
-	resp.Message = "logout success"
-	return nil
+	status := cache.Mcache.Delete(token)
+	if status {
+		resp.Code = 100
+		resp.Message = "logout success"
+		return nil
+	} else {
+		resp.Code = 100
+		resp.Message = "logout faild"
+		e := errors.New("logout faild")
+		return e
+	}
+
 }
 
 func (u *NewUserServiceExtHandler) VerifyToken(ctx context.Context, req *user_ext.VerifyRequest, resp *user_ext.VerifyResponse) error {
